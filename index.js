@@ -41,12 +41,71 @@ app.use(bodyParser.urlencoded({ extended: true }));
 //Write your code here//
 
 //CHALLENGE 1: GET All posts
+app.get("/posts", (req,res)=>{
+  res.json(posts);
+});
 
 //CHALLENGE 2: GET a specific post by id
 
+
 //CHALLENGE 3: POST a new post
+app.post("/posts", (req,res)=>{  
+  if(req.body){
+    const post = {
+      id: lastId +1,
+      title: req.body.title,
+      content: req.body.content,
+      author: req.body.author,
+      date: new Date(),    
+    }
+    lastId++;
+    posts.push(post);
+    res.json({message: "new post added successfully"})
+  }else {
+    res.json({message: "no data received"})
+  }
+
+});
+
 
 //CHALLENGE 4: PATCH a post when you just want to update one parameter
+app.get("/posts/:id", (req,res)=>{   
+  const postId =parseInt(req.params.id);   
+  const post = posts.find(post => post.id === postId);  
+  // const replacementPost = {
+  //   id: postId ,
+  //   title: req.body.title,
+  //   content: req.body.content,
+  //   author: req.body.author,
+  //   date: new Data(),
+  // }
+  // if(origionalPostIndex > -1){
+  //   posts.splice(origionalPostIndex,replacementPost);
+  // }
+  res.json(post);
+      
+});
+app.patch("/posts/:id", (req,res)=>{
+  console.log("called index.js:89");
+  const postId =parseInt(req.params.id);
+  console.log(req.body.id);   
+  console.log(req.body.content);   
+  console.log(req.body.author);   
+  const postIndex = posts.findIndex(post => post.id === postId);  
+  const replacementPost = {
+    id: postId ,
+    title: req.body.title,
+    content: req.body.content,
+    author: req.body.author,
+    date: new Date(),
+  }
+  if(postIndex > -1){
+    posts.splice(postIndex,1);
+    posts.push(replacementPost);
+  }
+  res.sendStatus(200);
+
+});
 
 //CHALLENGE 5: DELETE a specific post by providing the post id.
 
