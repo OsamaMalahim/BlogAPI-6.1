@@ -70,6 +70,7 @@ app.post("/api/posts/:id", async (req, res) => {
 
 // Delete a post
 app.get("/api/posts/delete/:id", async (req, res) => {
+  console.log("called server:73");
   try {
     await axios.delete(`${API_URL}/posts/${req.params.id}`);
     res.redirect("/");
