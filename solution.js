@@ -74,6 +74,7 @@ app.patch("/posts/:id", (req, res) => {
   if (req.body.title) post.title = req.body.title;
   if (req.body.content) post.content = req.body.content;
   if (req.body.author) post.author = req.body.author;
+  // note : in above code changing of title content and author is directly save in the orignal array posts
 
   res.json(post);
 });

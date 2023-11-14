@@ -4,7 +4,7 @@ import bodyParser from "body-parser";
 const app = express();
 const port = 4000;
 
-// In-memory data store
+// In-memory data store ... later we will use database
 let posts = [
   {
     id: 1,
@@ -69,28 +69,15 @@ app.post("/posts", (req,res)=>{
 
 
 //CHALLENGE 4: PATCH a post when you just want to update one parameter
+// get a specific post by id
 app.get("/posts/:id", (req,res)=>{   
-  const postId =parseInt(req.params.id);   
-  const post = posts.find(post => post.id === postId);  
-  // const replacementPost = {
-  //   id: postId ,
-  //   title: req.body.title,
-  //   content: req.body.content,
-  //   author: req.body.author,
-  //   date: new Data(),
-  // }
-  // if(origionalPostIndex > -1){
-  //   posts.splice(origionalPostIndex,replacementPost);
-  // }
+  const post = posts.find((p) => p.id === parseInt(req.params.id));
+  if (!post) return res.status(404).json({ message: "Post not found" });
   res.json(post);
       
 });
-app.patch("/posts/:id", (req,res)=>{
-  console.log("called index.js:89");
-  const postId =parseInt(req.params.id);
-  console.log(req.body.id);   
-  console.log(req.body.content);   
-  console.log(req.body.author);   
+app.patch("/posts/:id", (req,res)=>{  
+  const postId =parseInt(req.params.id);  
   const postIndex = posts.findIndex(post => post.id === postId);  
   const replacementPost = {
     id: postId ,
@@ -100,8 +87,8 @@ app.patch("/posts/:id", (req,res)=>{
     date: new Date(),
   }
   if(postIndex > -1){
-    posts.splice(postIndex,1);
-    posts.push(replacementPost);
+    posts.splice(postIndex,1,replacementPost);
+    // see the note in solution file line 77 
   }
   res.sendStatus(200);
 
@@ -111,8 +98,9 @@ app.patch("/posts/:id", (req,res)=>{
 app.delete("/posts/:id", (req,res)=>{
   const id = parseInt(req.params.id);
   const postIndex = posts.findIndex(p=>p.id ===id);
+  if (postIndex === -1) return res.status(404).json({ message: "Post not found" });
   posts.splice(postIndex,1);
-  res.sendStatus(200);
+  res.json({ message: "Post deleted" });
 });
 
 
